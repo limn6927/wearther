@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>天气查询工具</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        input {
+            padding: 8px;
+            margin-right: 10px;
+        }
+        button {
+            padding: 8px 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        #weatherResult {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+    <h1>天气查询</h1>
+    <input type="text" id="cityInput" placeholder="输入城市名称，如：Beijing">
+    <button onclick="getWeather()">查询</button>
+    <div id="weatherResult"></div>
+
+    <script>
+        async function getWeather() {
+    try {
+        const city = document.getElementById('cityInput').value;
+        const apiKey = '2c59e2a7cb24c064825d675407c28d66';
+        const response = await fetch(
+            `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`
+        );
+        
+        if (!response.ok) {
+            throw new Error(`请求失败，状态码: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        
+        // 重点检查这里的数据路径是否和API响应一致
+        const temp = data.main.temp;
+        const humidity = data.main.humidity;
+        
+        document.getElementById('weatherResult').innerHTML = 
+            `温度：${temp.toFixed(1)}℃ | 湿度：${humidity}%`;
+            
+    } catch (error) {
+        document.getElementById('weatherResult').innerHTML = 
+            `错误：${error.message}`;
+    }
+}
+    </script>
+</body>
+</html>
